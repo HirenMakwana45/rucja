@@ -1,125 +1,167 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:rucja/screens/splash_screen.dart';
+import '../utils/app_colors.dart';
+import '../store/NotificationStore/NotificationStore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../extensions/extension_util/string_extensions.dart';
+import '../../extensions/system_utils.dart';
+import '../../store/app_store.dart';
+import 'app_theme.dart';
+import 'extensions/common.dart';
+import 'extensions/constants.dart';
+import 'extensions/decorations.dart';
+import 'extensions/shared_pref.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
-void main() {
-  runApp(const MyApp());
+// import 'models/progress_setting_model.dart';
+// import 'network/rest_api.dart';
+// import 'screens/no_internet_screen.dart';
+// import 'screens/splash_screen.dart';
+import 'store/UserStore/UserStore.dart';
+import 'utils/app_common.dart';
+import 'utils/app_config.dart';
+import 'utils/app_constants.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
+
+AppStore appStore = AppStore();
+// UserStore userStore = UserStore();
+// NotificationStore notificationStore = NotificationStore();
+
+late SharedPreferences sharedPreferences;
+final navigatorKey = GlobalKey<NavigatorState>();
+
+
+
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  sharedPreferences = await SharedPreferences.getInstance();
+
+  // await Firebase.initializeApp().then((value) {
+  //   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  // });
+
+  // setLogInValue();
+  defaultAppButtonShapeBorder = RoundedRectangleBorder(borderRadius: radius(defaultAppButtonRadius));
+  oneSignalData();
+  await AwesomeNotifications().initialize(
+    null,
+    [
+      NotificationChannel(
+        channelKey: 'basic_channel',
+        channelName: 'Basic Notifications',
+        channelDescription: 'Basic Notification Channel',
+        defaultColor: primaryColor,
+        playSound: true,
+        importance: NotificationImportance.High,
+        locked: true,
+        enableVibration: true,
+      ),
+      NotificationChannel(
+        channelKey: 'scheduled_channel',
+        channelName: 'Scheduled Notifications',
+        channelDescription: 'Scheduled Notification Channel',
+        defaultColor: primaryColor,
+        locked: true,
+        importance: NotificationImportance.High,
+        playSound: true,
+        enableVibration: true,
+      ),
+    ],
+  );
+  setTheme();
+  // if (!getStringAsync(PROGRESS_SETTINGS_DETAIL).isEmptyOrNull) {
+  //   userStore.addAllProgressSettingsListItem(jsonDecode(getStringAsync(PROGRESS_SETTINGS_DETAIL)).map<ProgressSettingModel>((e) => ProgressSettingModel.fromJson(e)).toList());
+  // } else {
+  //   userStore.addAllProgressSettingsListItem(progressSettingList());
+  // }
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+// Future<void> updatePlayerId() async {
+//   Map req = {
+//     "player_id": getStringAsync(PLAYER_ID),
+//     "username": getStringAsync(USERNAME),
+//     "email": getStringAsync(EMAIL),
+//   };
+//   await updateProfileApi(req).then((value) {
+//     //
+//   }).catchError((error) {
+//     //
+//   });
+// }
 
-  // This widget is the root of your application.
+class MyApp extends StatefulWidget {
+  static String tag = '/MyApp';
+
+  @override
+  MyAppState createState() => MyAppState();
+}
+
+class MyAppState extends State<MyApp> {
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  bool isCurrentlyOnNoInternet = false;
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  void init() async {
+    // _connectivitySubscription = Connectivity().onConnectivityChanged.listen((e) {
+    //   if (e == ConnectivityResult.none) {
+    //     log('not connected');
+    //     isCurrentlyOnNoInternet = true;
+    //     push(NoInternetScreen());
+    //   } else {
+    //     if (isCurrentlyOnNoInternet) {
+    //       pop();
+    //       isCurrentlyOnNoInternet = false;
+    //       toast(languages.lblInternetIsConnected);
+    //     }
+    //     log('connected');
+    //   }
+    // });
+  }
+
+  // @override
+  // void didChangeDependencies() {
+  //   if (getIntAsync(THEME_MODE_INDEX) == ThemeModeSystem) appStore.setDarkMode(MediaQuery.of(context).platformBrightness == Brightness.dark);
+  //   super.didChangeDependencies();
+  // }
+
+  @override
+  void setState(fn) {
+    if (mounted) super.setState(fn);
+    _connectivitySubscription.cancel();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+    return Observer(builder: (context) {
+      return MaterialApp(
+        title: APP_NAME,
+        navigatorKey: navigatorKey,
+        debugShowCheckedModeBanner: false,
+        scrollBehavior: SBehavior(),
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: appStore.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+        // localizationsDelegates: [
+        //   // AppLocalizations(),
+        //   // GlobalMaterialLocalizations.delegate,
+        //   // GlobalWidgetsLocalizations.delegate,
+        //   // GlobalCupertinoLocalizations.delegate,
+        // ],
+        localeResolutionCallback: (locale, supportedLocales) => locale,
+        home: SplashScreen(),
+      );
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
   }
 }
