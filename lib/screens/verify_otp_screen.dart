@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:rucja/screens/user_details.dart';
 import '../extensions/common.dart';
 import '../extensions/extension_util/string_extensions.dart';
 import '../../extensions/loader_widget.dart';
@@ -108,8 +109,13 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('OTP Verification', style: boldTextStyle(size: 22)),
-                Text('${'We have sent the code verification to'} ${widget.phoneNumber!}', style: secondaryTextStyle()),
+                Text('Verify Phone Number', style: boldTextStyle(size: 22)),
+                Text("We will use this data to give you a better result and help to track your health",style: secondaryTextStyle(color: lightColor),),
+                // Text('${'We have sent the code verification to'} '
+                //     ''
+                //     // '${widget.phoneNumber!}'
+                //
+                //     , style: secondaryTextStyle()),
                 30.height,
                 OTPTextField(
                   pinLength: 6,
@@ -123,12 +129,28 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
                   },
                 ).center(),
                 30.height,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text("Didn't received OTP ?",
+                        style: primaryTextStyle()),
+                    GestureDetector(
+                        child: Text('Resend',
+                            style: primaryTextStyle(
+                                color: primaryColor))
+                            .paddingLeft(4),
+                        onTap: () {
+                        })
+                  ],
+                ),
+                30.height,
                 AppButton(
                   text:'Verify & Proceed',
                   width: context.width(),
                   color: primaryColor,
                   onTap: () {
-                    submit();
+                    UserDetails().launch(context);
+                    // submit();
                   },
                 ),
               ],

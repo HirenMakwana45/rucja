@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:rucja/screens/referal_screen.dart';
 import 'package:rucja/screens/sign_in_screen.dart';
 import '../../extensions/constants.dart';
 import '../../extensions/decorations.dart';
@@ -17,10 +18,6 @@ import '../extensions/loader_widget.dart';
 import '../extensions/shared_pref.dart';
 import '../extensions/text_styles.dart';
 import '../utils/app_colors.dart';
-import '../components/sign_up_step1_component.dart';
-import '../components/sign_up_step2_component.dart';
-import '../components/sign_up_step3_component.dart';
-import '../components/sign_up_step4_component.dart';
 import '../utils/app_common.dart';
 import '../utils/app_constants.dart';
 import '../utils/app_images.dart';
@@ -151,7 +148,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 isValidationRequired: true,
                                 focus: mPhoneNumberFocus,
                                 nextFocus: mEmailFocus,
-                                suffix: mSuffixTextFieldIconWidget(ic_mobile),
+                                // suffix: mSuffixTextFieldIconWidget(ic_mobile),
                                 decoration: defaultInputDecoration(context,
                                     label: 'Enter Phone Number'),
                               ),
@@ -201,51 +198,53 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 decoration: defaultInputDecoration(context,
                                     label: 'Enter Confirm Password'),
                               ),
-                              16.height,
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      SizedBox(
-                                        height: 20,
-                                        width: 20,
-                                        child: Checkbox(
-                                          fillColor: MaterialStatePropertyAll(
-                                              getBoolAsync(IS_REMEMBER)
-                                                  ? primaryColor
-                                                  : Colors.transparent),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: radius(4)),
-                                          materialTapTargetSize:
-                                              MaterialTapTargetSize.shrinkWrap,
-                                          focusColor: primaryColor,
-                                          side: BorderSide(color: primaryColor),
-                                          activeColor: primaryColor,
-                                          value: getBoolAsync(IS_REMEMBER),
-                                          onChanged: (bool? value) async {
-                                            await setValue(IS_REMEMBER, value);
-                                            setState(() {});
-                                          },
-                                        ),
-                                      ),
-                                      6.width,
-                                      Text('Remember Me',
-                                          style: secondaryTextStyle(
-                                              color: primaryColor)),
-                                    ],
-                                  ).expand(),
-                                ],
-                              ),
-                              60.height,
+                              // 16.height,
+                              // Row(
+                              //   mainAxisAlignment:
+                              //       MainAxisAlignment.spaceBetween,
+                              //   children: [
+                              //     Row(
+                              //       mainAxisAlignment: MainAxisAlignment.start,
+                              //       children: <Widget>[
+                              //         SizedBox(
+                              //           height: 20,
+                              //           width: 20,
+                              //           child: Checkbox(
+                              //             fillColor: MaterialStatePropertyAll(
+                              //                 getBoolAsync(IS_REMEMBER)
+                              //                     ? primaryColor
+                              //                     : Colors.transparent),
+                              //             shape: RoundedRectangleBorder(
+                              //                 borderRadius: radius(4)),
+                              //             materialTapTargetSize:
+                              //                 MaterialTapTargetSize.shrinkWrap,
+                              //             focusColor: primaryColor,
+                              //             side: BorderSide(color: primaryColor),
+                              //             activeColor: primaryColor,
+                              //             value: getBoolAsync(IS_REMEMBER),
+                              //             onChanged: (bool? value) async {
+                              //               await setValue(IS_REMEMBER, value);
+                              //               setState(() {});
+                              //             },
+                              //           ),
+                              //         ),
+                              //         6.width,
+                              //         Text('Remember Me',
+                              //             style: secondaryTextStyle(
+                              //                 color: primaryColor)),
+                              //       ],
+                              //     ).expand(),
+                              //   ],
+                              // ),
+                              //
+                              40.height,
                               AppButton(
                                 text: 'Sign Up',
                                 width: context.width(),
                                 color: primaryColor,
                                 onTap: () {
-                                  SignInScreen().launch(context);
+                                  ReferalScreen().launch(context);
+                                  // SignInScreen().launch(context);
 
                                   // save();
                                 },
@@ -266,7 +265,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       })
                                 ],
                               ),
-                              24.height,
                             ],
                           ).paddingSymmetric(horizontal: 16, vertical: 4),
                         ],

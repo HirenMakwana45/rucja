@@ -6,7 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 // import 'package:html/parser.dart';
 import 'package:intl/intl.dart';
 import '../extensions/extension_util/int_extensions.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+// import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../extensions/extension_util/string_extensions.dart';
 import '../../extensions/extension_util/widget_extensions.dart';
@@ -288,25 +288,25 @@ Widget mOption(String img, String title, Function? onCall) {
 //   }
 // }
 
-void oneSignalData() {
-
-  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-  OneSignal.Debug.setAlertLevel(OSLogLevel.none);
-  OneSignal.consentRequired(false);
-
-  OneSignal.initialize(mOneSignalID);
-
-
-  OneSignal.User.pushSubscription.addObserver((state) async {
-    print(OneSignal.User.pushSubscription.optedIn);
-    print(OneSignal.User.pushSubscription.id);
-    print(OneSignal.User.pushSubscription.token);
-    await setValue(PLAYER_ID, OneSignal.User.pushSubscription.id);
-  });
-  // if (userStore.isLoggedIn) {
-  //   updatePlayerId();
-  // }
-}
+// void oneSignalData() {
+//
+//   OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+//   OneSignal.Debug.setAlertLevel(OSLogLevel.none);
+//   OneSignal.consentRequired(false);
+//
+//   OneSignal.initialize(mOneSignalID);
+//
+//
+//   OneSignal.User.pushSubscription.addObserver((state) async {
+//     print(OneSignal.User.pushSubscription.optedIn);
+//     print(OneSignal.User.pushSubscription.id);
+//     print(OneSignal.User.pushSubscription.token);
+//     await setValue(PLAYER_ID, OneSignal.User.pushSubscription.id);
+//   });
+//   // if (userStore.isLoggedIn) {
+//   //   updatePlayerId();
+//   // }
+// }
 
 Widget mSuffixTextFieldIconWidget(String? img) {
   return Image.asset(img.validate(), height: 20, width: 20, color: Colors.grey).paddingAll(14);

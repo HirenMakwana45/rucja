@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:rucja/screens/create_password_screen.dart';
 import '../../extensions/loader_widget.dart';
 import '../../extensions/extension_util/context_extensions.dart';
 import '../../extensions/extension_util/int_extensions.dart';
@@ -60,9 +61,10 @@ class _ForgotPwdScreenState extends State<ForgotPwdScreen> {
                   children: [
                     Text('Reset Password?', style: boldTextStyle(size: 22)),
                     12.height,
-                    Text('Enter the email or phone number associated with your account to reset your password.', style: secondaryTextStyle()),
+                    Text('Enter the email or phone number associated with your account to reset your password.', style: secondaryTextStyle(color: lightColor)),
                     24.height,
                     Text('Email', style: secondaryTextStyle(color: textPrimaryColorGlobal)),
+                    4.height,
                     4.height,
                     AppTextField(
                       controller: mEmailCont,
@@ -81,6 +83,7 @@ class _ForgotPwdScreenState extends State<ForgotPwdScreen> {
                       color: primaryColor,
                       onTap: () {
                               toast('reset passsword link send successfully!');
+                              CreatePasswordScreen().launch(context);
 
                         // resetPassword();
                       },

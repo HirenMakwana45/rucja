@@ -1,4 +1,6 @@
 // Shared Pref
+import 'package:logger/logger.dart';
+
 const IS_FIRST_TIME = 'IS_FIRST_TIME';
 const IS_REMEMBER = 'IS_REMEMBER';
 const USERID = "USERID";
@@ -120,6 +122,7 @@ const subscriptions = "subscription_system";
 // const AdsBannerDetail_Show_Banner_On_Level = "AdsBannerDetail_Show_Banner_On_Level";
 
 // const IdealWeight = "idealweight";
+var logger = Logger();
 
 const PAYMENT_TYPE_STRIPE = 'stripe';
 const PAYMENT_TYPE_RAZORPAY = 'razorpay';

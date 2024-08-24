@@ -11,6 +11,12 @@ const scaffoldColorDark = Color(0xFF1D1D1D);
 // Other Color
 const socialBackground = Color(0xFF2F2F2F);
 
+const lightColor = Color(0xFFBFB5C1);
+
+const gradientStartColor =Color(0xFF7A2291);
+
+const gradientEndColor =Color(0xFFFF4B8B);
+
 const BackgroundColorImageColor = Color(0xffFAFAFA);
 
 const GreyLightColor = Color(0xffEDEDED);

@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:rucja/screens/choose_account_screen.dart';
 import '../../extensions/app_button.dart';
 import '../../extensions/extension_util/context_extensions.dart';
 import '../../extensions/extension_util/int_extensions.dart';
@@ -26,6 +29,34 @@ class _WalkThroughScreenState extends State<WalkThroughScreen> {
 
   List<WalkThroughModel> mWalkList = [];
   int mCurrentIndex = 0;
+  int _currentStep = 0;
+  final int _totalSteps = 3;
+
+  void _nextStep() {
+    setState(() {
+      if (_currentStep < _totalSteps - 1) {
+        setState(() {
+          _currentStep++;
+          mCurrentIndex++;
+        });
+        mPageController.animateToPage(
+          mCurrentIndex,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      } else {
+        ChooseAccountScreen().launch(context);
+      }
+    });
+  }
+
+  // void _previousStep() {
+  //   setState(() {
+  //     if (_currentStep > 0) {
+  //       _currentStep--;
+  //     }
+  //   });
+  // }
 
   @override
   void initState() {
@@ -35,9 +66,12 @@ class _WalkThroughScreenState extends State<WalkThroughScreen> {
 
   init() async {
     //
-    mWalkList.add(WalkThroughModel(image: ic_walk1, title: WALK1_TITLE));
-    mWalkList.add(WalkThroughModel(image: ic_walk2, title: WALK2_TITLE));
-    mWalkList.add(WalkThroughModel(image: ic_walk3, title: WALK3_TITLE));
+    mWalkList.add(WalkThroughModel(
+        image: ic_walk1, title: WALK1_TITLE, subTitle: SUBTITLE1));
+    mWalkList.add(WalkThroughModel(
+        image: ic_walk2, title: WALK2_TITLE, subTitle: SUBTITLE2));
+    mWalkList.add(WalkThroughModel(
+        image: ic_walk3, title: WALK3_TITLE, subTitle: SUBTITLE3));
   }
 
   @override
@@ -113,11 +147,13 @@ class _WalkThroughScreenState extends State<WalkThroughScreen> {
                   right: 4,
                   child: TextButton(
                     style: ButtonStyle(
-                      overlayColor: MaterialStateProperty.all(Colors.transparent),
+                      overlayColor:
+                          MaterialStateProperty.all(Colors.transparent),
                     ),
                     onPressed: () {
                       setValue(IS_FIRST_TIME, true);
-                      SignInScreen().launch(context);
+                      ChooseAccountScreen().launch(context);
+                      // SignInScreen().launch(context);
                     },
                     child: Text(
                       'Skip',
@@ -139,23 +175,25 @@ class _WalkThroughScreenState extends State<WalkThroughScreen> {
                         textAlign: TextAlign.center,
                       ),
                       16.height,
-                      dotIndicator(mWalkList, mCurrentIndex),
+                      Text(
+                        mWalkList[mCurrentIndex].subTitle.toString(),
+                        style: secondaryTextStyle(color: lightColor),
+                        textAlign: TextAlign.center,
+                      ),
+                      16.height,
                       30.height,
-                      AppButton(
-                        text: mCurrentIndex == 2 ? 'Get Started' : 'Next',
-                        width: context.width(),
-                        color: primaryColor,
-                        onTap: () {
-                          if (mCurrentIndex.toInt() >= 2) {
-                            setValue(IS_FIRST_TIME, true);
-                            SignInScreen().launch(context);
-                          } else {
-                            mPageController.nextPage(
-                              duration: Duration(seconds: 1),
-                              curve: Curves.linearToEaseOut,
-                            );
-                          }
-                        },
+                      GestureDetector(
+                        onTap: _nextStep,
+                        child: OnboardingStepIndicator(
+                          progress: (_currentStep + 1) / _totalSteps,
+                          size: 80,
+                          spacing: 6.0,
+                          borderGradient: LinearGradient(
+                            colors: [Colors.purple, Colors.pink],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -179,5 +217,115 @@ class _WalkThroughScreenState extends State<WalkThroughScreen> {
         ),
       ),
     );
+  }
+}
+
+class OnboardingStepIndicator extends StatelessWidget {
+  final double progress;
+  final double size;
+  final double spacing;
+  final Gradient borderGradient;
+
+  const OnboardingStepIndicator({
+    Key? key,
+    required this.progress,
+    required this.size,
+    this.spacing = 10.0,
+    required this.borderGradient,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(shape: BoxShape.circle, color: lightColor),
+          child: Center(
+            child: Container(
+              width: size - spacing,
+              height: size - spacing,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+              child: Center(
+                child: Container(
+                  width: size - spacing - 10,
+                  height: size - spacing - 10,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.transparent,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          top: spacing + 5,
+          left: spacing + 5,
+          child: Container(
+            width: size - spacing * 2 - 10,
+            height: size - spacing * 2 - 10,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                colors: [Colors.purple, Colors.pink],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: Center(
+              child: Icon(Icons.arrow_forward_ios_sharp, color: Colors.white, size: 30).paddingLeft(4),
+            ),
+          ),
+        ),
+        CustomPaint(
+          size: Size(size, size),
+          painter: ArcPainter(progress: progress),
+        ),
+      ],
+    );
+  }
+}
+
+class ArcPainter extends CustomPainter {
+  final double progress;
+
+  ArcPainter({required this.progress});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    double lineWidth = 5;
+    double radius = (size.width - lineWidth) / 2;
+
+    Paint paint = Paint()
+      ..shader = LinearGradient(
+        colors: [Colors.purple, Colors.pink],
+      ).createShader(Rect.fromCircle(
+          center: Offset(size.width / 2, size.height / 2), radius: radius))
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = lineWidth
+      ..strokeCap = StrokeCap.round;
+
+    double startAngle = -pi / 2;
+    double sweepAngle = 2 * pi * progress;
+
+    canvas.drawArc(
+      Rect.fromCircle(
+          center: Offset(size.width / 2, size.height / 2), radius: radius),
+      startAngle,
+      sweepAngle,
+      false,
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }

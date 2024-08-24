@@ -1,6 +1,7 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:rucja/screens/verify_otp_screen.dart';
 import '../extensions/common.dart';
 import '../../extensions/loader_widget.dart';
 import '../../extensions/extension_util/context_extensions.dart';
@@ -47,18 +48,24 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   Future<void> sendOTP() async {
-    hideKeyboard(context);
-    appStore.setLoading(true);
-
-    String number = '$countryCode${mMobileNumberCont.text.trim()}';
-    if (!number.startsWith('+')) {
-      number = '$mMobileNumberCont${mMobileNumberCont.text.trim()}';
-    }
-
-    await loginWithOTP(context, number, mMobileNumberCont.text.trim()).then((value) {}).catchError((e) {
-      toast(e.toString());
-      appStore.setLoading(false);
-    });
+    VerifyOTPScreen(
+      // verificationId: verificationId,
+      // isCodeSent: true,
+      // phoneNumber: phoneNumber,
+      // mobileNo: mobileNo,
+    ).launch(context);
+    // hideKeyboard(context);
+    // appStore.setLoading(true);
+    //
+    // String number = '$countryCode${mMobileNumberCont.text.trim()}';
+    // if (!number.startsWith('+')) {
+    //   number = '$mMobileNumberCont${mMobileNumberCont.text.trim()}';
+    // }
+    //
+    // await loginWithOTP(context, number, mMobileNumberCont.text.trim()).then((value) {}).catchError((e) {
+    //   toast(e.toString());
+    //   appStore.setLoading(false);
+    // });
   }
 
   @override
@@ -83,7 +90,7 @@ class _OTPScreenState extends State<OTPScreen> {
                     controller: mMobileNumberCont,
                     textFieldType: TextFieldType.PHONE,
                     isValidationRequired: true,
-                    suffix: mSuffixTextFieldIconWidget(ic_call),
+                    // suffix: mSuffixTextFieldIconWidget(ic_call),
                     decoration: defaultInputDecoration(context,
                         label: 'Enter Phone Number',
                         mPrefix: IntrinsicHeight(

@@ -66,3 +66,10 @@ const ic_radio_fill = "assets/ic_radio_button_fill.png";
 const no_data_found = "assets/no_data_found.png";
 const no_internet = "assets/no_internet.png";
 const ic_placeholder = "assets/ic_placeholder.jpg";
+
+//New
+const ic_patient= "assets/ic_patient.png";
+const ic_doctor = "assets/ic_doctor.png";
+const ic_male = "assets/ic_male.png";
+const ic_female = "assets/ic_female.png";
+const ic_smiley = "assets/ic_smiley.png";

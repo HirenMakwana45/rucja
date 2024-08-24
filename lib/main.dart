@@ -48,7 +48,7 @@ Future<void> main() async {
 
   // setLogInValue();
   defaultAppButtonShapeBorder = RoundedRectangleBorder(borderRadius: radius(defaultAppButtonRadius));
-  oneSignalData();
+  // oneSignalData();
   await AwesomeNotifications().initialize(
     null,
     [

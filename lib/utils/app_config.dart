@@ -15,6 +15,12 @@ const DEFAULT_LANGUAGE = 'en';
 const WALK1_TITLE = "Keep reports of \nyour health";
 const WALK2_TITLE = "Track your health \nwith us";
 const WALK3_TITLE = "Track your daily \nactivity";
+
+
+const SUBTITLE1 = "Borem ipsum dolor sit amet, consectetur \Nadipiscing elit. Nunc vulputate";
+const SUBTITLE2 = "Borem ipsum dolor sit amet, consectetur \Nadipiscing elit. Nunc vulputate";
+const SUBTITLE3 = "Borem ipsum dolor sit amet, consectetur \Nadipiscing elit. Nunc vulputate";
+
 //endregion
 
 //region onesignal
