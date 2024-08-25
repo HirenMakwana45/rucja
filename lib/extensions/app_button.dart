@@ -70,7 +70,8 @@ class _AppButtonState extends State<AppButton>
         ),
         lowerBound: 0.0,
         upperBound: 0.1,
-      )..addListener(() {
+      )
+        ..addListener(() {
           setState(() {});
         });
     }
@@ -111,31 +112,47 @@ class _AppButtonState extends State<AppButton>
   Widget buildButton() {
     return Padding(
       padding: widget.margin ?? EdgeInsets.zero,
-      child: MaterialButton(
-        minWidth: widget.width,
-        padding: widget.padding ?? dynamicAppButtonPadding(context),
-        onPressed: widget.enabled.validate(value: true)
-            ? widget.onTap != null
-                ? widget.onTap as void Function()?
-                : null
-            : null,
-        color: widget.color ?? appButtonBackgroundColorGlobal,
-        child: widget.child ??
-            Text(
-              widget.text.validate(),
-              style: widget.textStyle ??
-                  boldTextStyle(
-                    color: widget.textColor ?? defaultAppButtonTextColorGlobal,
-                  ),
-            ),
-        shape: widget.shapeBorder ?? defaultAppButtonShapeBorder,
-        elevation: widget.elevation ?? defaultAppButtonElevation,
-        animationDuration: Duration(milliseconds: 300),
+      child: Container(
+        width: widget.width,
         height: widget.height,
-        disabledColor: widget.disabledColor,
-        focusColor: widget.focusColor,
-        hoverColor: widget.hoverColor,
-        splashColor: widget.splashColor,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF7A2291), // Start color
+              Color(0xFFFF4B8B), // End color
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight
+          ),
+          borderRadius: widget.shapeBorder is RoundedRectangleBorder
+              ? (widget.shapeBorder as RoundedRectangleBorder).borderRadius
+              : BorderRadius.circular(
+              24.0),
+        ),
+        child: MaterialButton(
+          onPressed: widget.enabled.validate(value: true)
+              ? widget.onTap != null
+              ? widget.onTap as void Function()?
+              : null
+              : null,
+          color: Colors.transparent,
+          elevation: 0,
+          shape: widget.shapeBorder ?? defaultAppButtonShapeBorder,
+          padding: widget.padding ?? dynamicAppButtonPadding(context),
+          disabledColor: widget.disabledColor,
+          focusColor: widget.focusColor,
+          hoverColor: widget.hoverColor,
+          splashColor: widget.splashColor,
+          child: widget.child ??
+              Text(
+                widget.text.validate(),
+                style: widget.textStyle ??
+                    boldTextStyle(
+                      color: widget.textColor ??
+                          defaultAppButtonTextColorGlobal,
+                    ),
+              ),
+        ),
       ),
     );
   }

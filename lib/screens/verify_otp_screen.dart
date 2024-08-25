@@ -125,7 +125,9 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
                   },
                   onCompleted: (pin) {
                     otpCode = pin;
-                    submit();
+                    // submit();
+                    UserDetails().launch(context);
+
                   },
                 ).center(),
                 30.height,

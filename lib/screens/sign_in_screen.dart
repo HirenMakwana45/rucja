@@ -303,7 +303,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                 width: context.width(),
                                 color: primaryColor,
                                 onTap: () {
-                                  save();
+                                  DashboardScreen().launch(context);
+                                  // save();
                                 },
                               ),
                               30.height,
